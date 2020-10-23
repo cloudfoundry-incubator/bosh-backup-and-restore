@@ -36,6 +36,13 @@ type lockingDependency struct {
 }
 
 func (lo KahnLockOrderer) Order(jobs []orchestrator.Job) ([][]orchestrator.Job, error) {
+	if lo.lockFree {
+		// This may not be the best place to put this intervention, but then this is a spike.
+		// See https://www.pivotaltracker.com/n/projects/2128569/stories/174147726 for details
+		// When doing this properly, consider putting the intervention in orchestrator/deployment.go
+		return [][]orchestrator.Job{}, nil
+	}
+
 	var lockingDependencies, err = findLockingDependencies(jobs, lo.orderConstraintSpecifier)
 	if err != nil {
 		return nil, err
