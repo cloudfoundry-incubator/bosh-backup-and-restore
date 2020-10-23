@@ -18,5 +18,5 @@ func BuildDirectorBackupChecker(host, username, privateKeyPath, bbrVersion strin
 		ssh.NewSshRemoteRunner,
 	)
 
-	return orchestrator.NewBackupChecker(logger, deploymentManager, orderer.NewKahnBackupLockOrderer())
+	return orchestrator.NewBackupChecker(logger, deploymentManager, orderer.NewKahnBackupLockOrderer(false))
 }

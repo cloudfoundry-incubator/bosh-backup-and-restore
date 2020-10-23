@@ -8,20 +8,22 @@ import (
 
 type KahnLockOrderer struct {
 	orderConstraintSpecifier orderConstraintSpecifier
+	lockFree                 bool
 }
 
-func newKahnLockOrderer(specifier orderConstraintSpecifier) KahnLockOrderer {
+func newKahnLockOrderer(specifier orderConstraintSpecifier, lockFree bool) KahnLockOrderer {
 	return KahnLockOrderer{
 		orderConstraintSpecifier: specifier,
+		lockFree:                 lockFree,
 	}
 }
 
-func NewKahnBackupLockOrderer() KahnLockOrderer {
-	return newKahnLockOrderer(NewBackupOrderConstraintSpecifier())
+func NewKahnBackupLockOrderer(lockFree bool) KahnLockOrderer {
+	return newKahnLockOrderer(NewBackupOrderConstraintSpecifier(), lockFree)
 }
 
 func NewKahnRestoreLockOrderer() KahnLockOrderer {
-	return newKahnLockOrderer(NewRestoreOrderConstraintSpecifier())
+	return newKahnLockOrderer(NewRestoreOrderConstraintSpecifier(), false)
 }
 
 type orderConstraintSpecifier interface {

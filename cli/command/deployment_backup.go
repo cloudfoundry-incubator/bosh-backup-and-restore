@@ -34,6 +34,10 @@ func (d DeploymentBackupCommand) Cli() cli.Command {
 				Name:  "artifact-path, a",
 				Usage: "Specify an optional path to save the backup artifacts to",
 			},
+			cli.BoolFlag{
+				Name:  "unsafe-lock-free-backup",
+				Usage: "Experimental feature to skip locking steps when backing up TAS. Use only on TAS and at your own risk",
+			},
 		},
 	}
 }
@@ -44,15 +48,16 @@ func (d DeploymentBackupCommand) Action(c *cli.Context) error {
 	username, password, target, caCert, bbrVersion, debug, deployment, allDeployments := getDeploymentParams(c)
 	withManifest := c.Bool("with-manifest")
 	artifactPath := c.String("artifact-path")
+	lockFree := c.Bool("unsafe-lock-free-backup")
 
 	if allDeployments {
-		return backupAll(target, username, password, caCert, artifactPath, withManifest, bbrVersion, debug)
+		return backupAll(target, username, password, caCert, artifactPath, withManifest, bbrVersion, debug, lockFree)
 	}
 
-	return backupSingleDeployment(deployment, target, username, password, caCert, artifactPath, withManifest, bbrVersion, debug)
+	return backupSingleDeployment(deployment, target, username, password, caCert, artifactPath, withManifest, bbrVersion, debug, lockFree)
 }
 
-func backupAll(target, username, password, caCert, artifactPath string, withManifest bool, bbrVersion string, debug bool) error {
+func backupAll(target, username, password, caCert, artifactPath string, withManifest bool, bbrVersion string, debug bool, lockFree bool) error {
 	backupAction := func(deploymentName string) orchestrator.Error {
 		timestamp := time.Now().UTC().Format(artifactTimeStampFormat)
 		logFilePath, buffer, logger := createLogger(timestamp, artifactPath, deploymentName, debug)
@@ -66,6 +71,7 @@ func backupAll(target, username, password, caCert, artifactPath string, withMani
 			bbrVersion,
 			logger,
 			timestamp,
+			lockFree,
 		)
 		if factoryErr != nil {
 			return orchestrator.NewError(factoryErr)
@@ -107,11 +113,11 @@ func backupAll(target, username, password, caCert, artifactPath string, withMani
 		deployment.NewParallelExecutor())
 }
 
-func backupSingleDeployment(deployment, target, username, password, caCert, artifactPath string, withManifest bool, bbrVersion string, debug bool) error {
+func backupSingleDeployment(deployment, target, username, password, caCert, artifactPath string, withManifest bool, bbrVersion string, debug bool, lockFree bool) error {
 	logger := factory.BuildBoshLogger(debug)
 	timeStamp := time.Now().UTC().Format(artifactTimeStampFormat)
 
-	backuper, err := factory.BuildDeploymentBackuper(target, username, password, caCert, withManifest, bbrVersion, logger, timeStamp)
+	backuper, err := factory.BuildDeploymentBackuper(target, username, password, caCert, withManifest, bbrVersion, logger, timeStamp, lockFree)
 	if err != nil {
 		return processError(orchestrator.NewError(err))
 	}

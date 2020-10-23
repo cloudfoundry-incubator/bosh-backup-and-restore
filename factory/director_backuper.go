@@ -27,7 +27,7 @@ func BuildDirectorBackuper(host, username, privateKeyPath, bbrVersion string, ha
 		backup.BackupDirectoryManager{},
 		logger,
 		deploymentManager,
-		orderer.NewKahnBackupLockOrderer(),
+		orderer.NewKahnBackupLockOrderer(false),
 		execr,
 		time.Now,
 		orchestrator.NewArtifactCopier(execr, logger),

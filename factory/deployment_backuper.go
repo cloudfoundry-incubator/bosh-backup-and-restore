@@ -20,6 +20,7 @@ func BuildDeploymentBackuper(
 	bbrVersion string,
 	logger boshlog.Logger,
 	timestamp string,
+	lockFree bool,
 ) (*orchestrator.Backuper, error) {
 	boshClient, err := BuildBoshClient(target, username, password, caCert, bbrVersion, logger)
 	if err != nil {
@@ -32,7 +33,7 @@ func BuildDeploymentBackuper(
 		backup.BackupDirectoryManager{},
 		logger,
 		bosh.NewDeploymentManager(boshClient, logger, withManifest),
-		orderer.NewKahnBackupLockOrderer(),
+		orderer.NewKahnBackupLockOrderer(lockFree),
 		execr,
 		time.Now,
 		orchestrator.NewArtifactCopier(execr, logger),

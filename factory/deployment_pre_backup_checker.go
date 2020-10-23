@@ -10,5 +10,5 @@ func BuildDeploymentBackupChecker(boshClient bosh.Client,
 	logger bosh.Logger,
 	withManifest bool) *orchestrator.BackupChecker {
 	return orchestrator.NewBackupChecker(logger,
-		bosh.NewDeploymentManager(boshClient, logger, withManifest), orderer.NewKahnBackupLockOrderer())
+		bosh.NewDeploymentManager(boshClient, logger, withManifest), orderer.NewKahnBackupLockOrderer(false))
 }

@@ -24,5 +24,5 @@ func BuildDirectorBackupCleaner(host,
 		ssh.NewSshRemoteRunner,
 	)
 
-	return orchestrator.NewBackupCleaner(logger, deploymentManager, orderer.NewKahnBackupLockOrderer(), executor.NewParallelExecutor())
+	return orchestrator.NewBackupCleaner(logger, deploymentManager, orderer.NewKahnBackupLockOrderer(false), executor.NewParallelExecutor())
 }
