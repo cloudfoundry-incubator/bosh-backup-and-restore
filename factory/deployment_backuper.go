@@ -38,5 +38,6 @@ func BuildDeploymentBackuper(
 		time.Now,
 		orchestrator.NewArtifactCopier(execr, logger),
 		timestamp,
+		lockFree,
 	), nil
 }

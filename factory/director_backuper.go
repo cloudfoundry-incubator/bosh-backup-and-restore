@@ -32,5 +32,6 @@ func BuildDirectorBackuper(host, username, privateKeyPath, bbrVersion string, ha
 		time.Now,
 		orchestrator.NewArtifactCopier(execr, logger),
 		timeStamp,
+		false,
 	)
 }

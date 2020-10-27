@@ -7,14 +7,14 @@ import (
 )
 
 func NewBackuper(backupManager BackupManager, logger Logger, deploymentManager DeploymentManager,
-	lockOrderer LockOrderer, executor exe.Executor, nowFunc func() time.Time, artifactCopier ArtifactCopier, timestamp string) *Backuper {
+	lockOrderer LockOrderer, executor exe.Executor, nowFunc func() time.Time, artifactCopier ArtifactCopier, timestamp string, lockFree bool) *Backuper {
 
 	findDeploymentStep := NewFindDeploymentStep(deploymentManager, logger)
 	backupable := NewBackupableStep(lockOrderer, logger)
 	createArtifact := NewCreateArtifactStep(logger, backupManager, deploymentManager, nowFunc, timestamp)
 	lock := NewLockStep(lockOrderer, executor)
 
-	backup := NewBackupStep(executor)
+	backup := NewBackupStep(executor, lockFree)
 	unlockAfterSuccessfulBackup := NewPostBackupUnlockStep(true, lockOrderer, executor)
 	unlockAfterFailedBackup := NewPostBackupUnlockStep(false, lockOrderer, executor)
 	drain := NewDrainStep(logger, artifactCopier)

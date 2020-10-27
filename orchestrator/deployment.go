@@ -19,7 +19,7 @@ type Deployment interface {
 	IsRestorable() bool
 	RestorableInstances() []Instance
 	PreBackupLock(LockOrderer, executor.Executor) error
-	Backup(executor.Executor) error
+	Backup(executor.Executor, bool) error
 	PostBackupUnlock(bool, LockOrderer, executor.Executor) error
 	Restore() error
 	Cleanup() error
@@ -94,7 +94,7 @@ func (bd *deployment) PreBackupLock(lockOrderer LockOrderer, executor executor.E
 	return ConvertErrors(preBackupLockErrors)
 }
 
-func (bd *deployment) Backup(exe executor.Executor) error {
+func (bd *deployment) Backup(exe executor.Executor, lockFree bool) error {
 	bd.Logger.Info("bbr", "Running backup scripts...")
 
 	instances := bd.instances.AllBackupable()
@@ -103,6 +103,11 @@ func (bd *deployment) Backup(exe executor.Executor) error {
 	for _, i := range instances {
 		i.MarkArtifactDirCreated()
 		for _, j := range i.Jobs() {
+			if lockFree && i.Name() == "backup_restore" && strings.Contains(j.Name(), "blobstore") {
+				// SPIKE CODE: when backing up lock-free, never back up external blobstores.
+				// See this story for spike details: https://www.pivotaltracker.com/story/show/174147726
+				continue
+			}
 			executables = append(executables, NewBackupExecutable(j))
 		}
 	}
