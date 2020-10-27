@@ -27,7 +27,7 @@ func (d DeploymentRestoreCommand) Cli() cli.Command {
 			},
 			cli.BoolFlag{
 				Name:  "unsafe-lock-free-restore",
-				Usage: "Experimental feature to skip locking steps when restoring TAS. Use only on TAS, with a backup that was also taken lock-free, and at your own risk",
+				Usage: "Experimental feature to skip locking steps when restoring TAS. Use only on CF, with a backup that was also taken lock-free, and at your own risk",
 			},
 		},
 	}

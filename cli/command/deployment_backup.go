@@ -36,7 +36,7 @@ func (d DeploymentBackupCommand) Cli() cli.Command {
 			},
 			cli.BoolFlag{
 				Name:  "unsafe-lock-free-backup",
-				Usage: "Experimental feature to skip locking steps when backing up TAS. Use only on TAS and at your own risk",
+				Usage: "Experimental feature to skip locking steps when backing up TAS. Use only on CF and at your own risk",
 			},
 		},
 	}
