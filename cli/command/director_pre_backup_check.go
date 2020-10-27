@@ -34,7 +34,7 @@ func (checkCommand DirectorPreBackupCheckCommand) Action(c *cli.Context) error {
 		c.GlobalBool("debug"),
 	)
 
-	err := backupChecker.Check(directorName)
+	err := backupChecker.Check(directorName, false)
 
 	if err != nil {
 		fmt.Printf("Director cannot be backed up.\n")

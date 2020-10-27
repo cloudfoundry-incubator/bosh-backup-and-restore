@@ -48,11 +48,11 @@ type AuthInfo struct {
 }
 
 //Backup checks if a deployment has backupable instances and backs them up.
-func (b Backuper) Backup(deploymentName, artifactPath string) Error {
+func (b Backuper) Backup(deploymentName, artifactPath string, lockFree bool) Error {
 	session := NewSession(deploymentName)
 	session.SetCurrentArtifactPath(artifactPath)
 
-	err := b.workflow.Run(session)
+	err := b.workflow.Run(session, lockFree)
 
 	return err
 }

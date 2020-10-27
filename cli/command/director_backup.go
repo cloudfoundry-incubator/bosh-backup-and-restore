@@ -44,7 +44,7 @@ func (checkCommand DirectorBackupCommand) Action(c *cli.Context) error {
 		c.GlobalBool("debug"),
 		timeStamp)
 
-	backupErr := backuper.Backup(directorName, c.String("artifact-path"))
+	backupErr := backuper.Backup(directorName, c.String("artifact-path"), false)
 
 	if backupErr.ContainsUnlockOrCleanupOrArtifactDirExists() {
 		return processErrorWithFooter(backupErr, backupCleanupAdvisedNotice)

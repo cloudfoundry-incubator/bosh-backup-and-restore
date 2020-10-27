@@ -20,10 +20,16 @@ func (d DeploymentRestoreCommand) Cli() cli.Command {
 		Aliases: []string{"r"},
 		Usage:   "Restore a deployment from backup",
 		Action:  d.Action,
-		Flags: []cli.Flag{cli.StringFlag{
-			Name:  "artifact-path, a",
-			Usage: "Path to the artifact to restore",
-		}},
+		Flags: []cli.Flag{
+			cli.StringFlag{
+				Name:  "artifact-path, a",
+				Usage: "Path to the artifact to restore",
+			},
+			cli.BoolFlag{
+				Name:  "unsafe-lock-free-restore",
+				Usage: "Experimental feature to skip locking steps when restoring TAS. Use only on TAS, with a backup that was also taken lock-free, and at your own risk",
+			},
+		},
 	}
 }
 
@@ -36,6 +42,7 @@ func (d DeploymentRestoreCommand) Action(c *cli.Context) error {
 
 	deployment := c.Parent().String("deployment")
 	artifactPath := c.String("artifact-path")
+	lockFree := c.Bool("unsafe-lock-free-backup")
 
 	restorer, err := factory.BuildDeploymentRestorer(c.Parent().String("target"),
 		c.Parent().String("username"),
@@ -48,6 +55,6 @@ func (d DeploymentRestoreCommand) Action(c *cli.Context) error {
 		return processError(orchestrator.NewError(err))
 	}
 
-	restoreErr := restorer.Restore(deployment, artifactPath)
+	restoreErr := restorer.Restore(deployment, artifactPath, lockFree)
 	return processError(restoreErr)
 }

@@ -36,7 +36,7 @@ func NewDeploymentManager(
 	}
 }
 
-func (dm DeploymentManager) Find(deploymentName string) (orchestrator.Deployment, error) {
+func (dm DeploymentManager) Find(deploymentName string, lockFree bool) (orchestrator.Deployment, error) {
 	keyContents, err := ioutil.ReadFile(dm.privateKeyFile)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed reading private key")

@@ -13,7 +13,7 @@ type ValidateArtifactStep struct {
 	backupManager BackupManager
 }
 
-func (s *ValidateArtifactStep) Run(session *Session) error {
+func (s *ValidateArtifactStep) Run(session *Session, _ bool) error {
 	s.logger.Info("bbr", "Starting restore of %s...\n", session.deploymentName)
 	backup, err := s.backupManager.Open(session.CurrentArtifactPath(), s.logger)
 	if err != nil {

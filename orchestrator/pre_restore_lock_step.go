@@ -17,7 +17,7 @@ func NewPreRestoreLockStep(lockOrderer LockOrderer, executor executor.Executor) 
 	}
 }
 
-func (s *PreRestoreLockStep) Run(session *Session) error {
+func (s *PreRestoreLockStep) Run(session *Session, _ bool) error {
 	err := session.CurrentDeployment().PreRestoreLock(s.lockOrderer, s.executor)
 
 	if err != nil {

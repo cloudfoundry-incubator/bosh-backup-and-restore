@@ -18,7 +18,7 @@ func NewRestorableStep(lockOrderer LockOrderer, logger Logger) Step {
 	}
 }
 
-func (s *RestorableStep) Run(session *Session) error {
+func (s *RestorableStep) Run(session *Session, _ bool) error {
 
 	for _, instance := range session.CurrentDeployment().RestorableInstances() {
 		if instance.HasMetadataRestoreNames() {

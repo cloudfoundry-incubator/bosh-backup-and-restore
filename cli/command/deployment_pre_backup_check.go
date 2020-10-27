@@ -2,6 +2,7 @@ package command
 
 import (
 	"fmt"
+
 	"github.com/cloudfoundry-incubator/bosh-backup-and-restore/bosh"
 	"github.com/cloudfoundry-incubator/bosh-backup-and-restore/executor/deployment"
 	"github.com/cloudfoundry/bosh-utils/logger"
@@ -61,7 +62,7 @@ func (d DeploymentPreBackupCheck) Action(c *cli.Context) error {
 }
 
 func backupableCheck(backupChecker *orchestrator.BackupChecker, deploymentName string) orchestrator.Error {
-	err := backupChecker.Check(deploymentName)
+	err := backupChecker.Check(deploymentName, false)
 
 	if err != nil {
 		printlnWithTimestamp(fmt.Sprintf("Deployment '%s' cannot be backed up.", deploymentName))

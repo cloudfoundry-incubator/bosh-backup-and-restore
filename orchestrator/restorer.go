@@ -31,9 +31,9 @@ func NewRestorer(backupManager BackupManager, logger Logger, deploymentManager D
 	}
 }
 
-func (r Restorer) Restore(deploymentName, backupPath string) Error {
+func (r Restorer) Restore(deploymentName, backupPath string, lockFree bool) Error {
 	session := NewSession(deploymentName)
 	session.SetCurrentArtifactPath(backupPath)
 
-	return r.workflow.Run(session)
+	return r.workflow.Run(session, lockFree)
 }

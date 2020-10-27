@@ -37,7 +37,7 @@ func (d DeploymentRestoreCleanupCommand) Action(c *cli.Context) error {
 	}
 
 	deployment := c.Parent().String("deployment")
-	cleanupErr := cleaner.Cleanup(deployment)
+	cleanupErr := cleaner.Cleanup(deployment, false)
 
 	return processError(cleanupErr)
 }

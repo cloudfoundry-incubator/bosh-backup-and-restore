@@ -7,7 +7,7 @@ type LockStep struct {
 	executor    executor.Executor
 }
 
-func (s *LockStep) Run(session *Session) error {
+func (s *LockStep) Run(session *Session, _ bool) error {
 	err := session.CurrentDeployment().PreBackupLock(s.lockOrderer, s.executor)
 	if err != nil {
 		return NewLockError(err.Error())

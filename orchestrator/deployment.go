@@ -21,7 +21,7 @@ type Deployment interface {
 	PreBackupLock(LockOrderer, executor.Executor) error
 	Backup(executor.Executor, bool) error
 	PostBackupUnlock(bool, LockOrderer, executor.Executor) error
-	Restore() error
+	Restore(bool) error
 	Cleanup() error
 	CleanupPrevious() error
 	Instances() []Instance
@@ -156,9 +156,9 @@ func (bd *deployment) PreRestoreLock(lockOrderer LockOrderer, executor executor.
 	return ConvertErrors(preRestoreLockErrors)
 }
 
-func (bd *deployment) Restore() error {
+func (bd *deployment) Restore(lockFree bool) error {
 	bd.Logger.Info("bbr", "Running restore scripts...")
-	err := bd.instances.AllRestoreable().Restore()
+	err := bd.instances.AllRestoreable().Restore(lockFree)
 	bd.Logger.Info("bbr", "Finished running restore scripts.")
 	return err
 }

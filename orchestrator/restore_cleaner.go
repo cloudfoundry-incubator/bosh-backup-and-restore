@@ -23,9 +23,9 @@ type RestoreCleaner struct {
 	*Workflow
 }
 
-func (c RestoreCleaner) Cleanup(deploymentName string) Error {
+func (c RestoreCleaner) Cleanup(deploymentName string, lockFree bool) Error {
 	session := NewSession(deploymentName)
-	currentError := c.Workflow.Run(session)
+	currentError := c.Workflow.Run(session, lockFree)
 
 	if len(currentError) == 0 {
 		c.Logger.Info("bbr", "'%s' cleaned up\n", deploymentName)

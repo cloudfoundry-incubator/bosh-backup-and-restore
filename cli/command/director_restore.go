@@ -46,6 +46,6 @@ func (cmd DirectorRestoreCommand) Action(c *cli.Context) error {
 		c.GlobalBool("debug"),
 	)
 
-	restoreErr := restorer.Restore(directorName, artifactPath)
+	restoreErr := restorer.Restore(directorName, artifactPath, false)
 	return processError(restoreErr)
 }

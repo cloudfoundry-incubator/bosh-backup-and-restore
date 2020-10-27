@@ -31,7 +31,7 @@ func (d DirectorBackupCleanupCommand) Action(c *cli.Context) error {
 		c.GlobalBool("debug"),
 	)
 
-	cleanupErr := cleaner.Cleanup(directorName)
+	cleanupErr := cleaner.Cleanup(directorName, false)
 
 	return processError(cleanupErr)
 }

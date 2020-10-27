@@ -14,7 +14,7 @@ func NewAddFinishTimeStep(nowFunc func() time.Time) Step {
 	}
 }
 
-func (s *AddFinishTimeStep) Run(session *Session) error {
+func (s *AddFinishTimeStep) Run(session *Session, _ bool) error {
 	if session.CurrentArtifact() != nil {
 		return session.CurrentArtifact().AddFinishTime(s.nowFunc())
 	}

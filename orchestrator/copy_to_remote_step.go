@@ -14,7 +14,7 @@ func NewCopyToRemoteStep(artifactCopier ArtifactCopier) Step {
 	}
 }
 
-func (s *CopyToRemoteStep) Run(session *Session) error {
+func (s *CopyToRemoteStep) Run(session *Session, _ bool) error {
 	err := s.artifactCopier.UploadBackupToDeployment(session.CurrentArtifact(), session.CurrentDeployment())
 	if err != nil {
 		return errors.Errorf("Unable to send backup to remote machine. Got error: %s", err)

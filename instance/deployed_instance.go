@@ -2,6 +2,7 @@ package instance
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/cloudfoundry-incubator/bosh-backup-and-restore/orchestrator"
 	"github.com/cloudfoundry-incubator/bosh-backup-and-restore/ssh"
@@ -80,9 +81,16 @@ func artifactDirectoryVariables(artifactDirectory string) map[string]string {
 	}
 }
 
-func (i *DeployedInstance) Restore() error {
+func (i *DeployedInstance) Restore(lockFree bool) error {
 	var restoreErrors []error
 	for _, job := range i.jobs {
+		// SPIKE CODE: when restoring up lock-free, never
+		// restore external blobstores.  See this story for
+		// spike details:
+		// https://www.pivotaltracker.com/story/show/174147726
+		if lockFree && i.Name() == "backup_restore" && strings.Contains(job.Name(), "blobstore") {
+			continue
+		}
 		if err := job.Restore(); err != nil {
 			restoreErrors = append(restoreErrors, err)
 		}

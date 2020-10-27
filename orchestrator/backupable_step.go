@@ -13,7 +13,7 @@ func NewBackupableStep(lockOrderer LockOrderer, logger Logger) Step {
 	return &BackupableStep{lockOrderer: lockOrderer, logger: logger}
 }
 
-func (s *BackupableStep) Run(session *Session) error {
+func (s *BackupableStep) Run(session *Session, _ bool) error {
 	s.logger.Info("bbr", "Running pre-checks for backup of %s...\n", session.DeploymentName())
 
 	deployment := session.CurrentDeployment()

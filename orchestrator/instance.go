@@ -19,7 +19,7 @@ type Instance interface {
 	MarkArtifactDirCreated()
 	IsRestorable() bool
 	Backup() error
-	Restore() error
+	Restore(lockFree bool) error
 	Cleanup() error
 	CleanupPrevious() error
 	ArtifactsToBackup() []BackupArtifact
@@ -154,9 +154,9 @@ func (is instances) Backup() error {
 	return nil
 }
 
-func (is instances) Restore() error {
+func (is instances) Restore(lockFree bool) error {
 	for _, instance := range is {
-		err := instance.Restore()
+		err := instance.Restore(lockFree)
 		if err != nil {
 			return err
 		}

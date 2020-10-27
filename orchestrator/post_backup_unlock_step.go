@@ -16,7 +16,7 @@ func NewPostBackupUnlockStep(afterSuccessfulBackup bool, lockOrderer LockOrderer
 	}
 }
 
-func (s *PostBackupUnlockStep) Run(session *Session) error {
+func (s *PostBackupUnlockStep) Run(session *Session, _ bool) error {
 	err := session.CurrentDeployment().PostBackupUnlock(s.afterSuccessfulBackup, s.lockOrderer, s.executor)
 	if err != nil {
 		return NewPostUnlockError(err.Error())

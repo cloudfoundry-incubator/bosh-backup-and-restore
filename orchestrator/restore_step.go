@@ -10,8 +10,8 @@ func NewRestoreStep(logger Logger) Step {
 	return &RestoreStep{logger: logger}
 }
 
-func (s *RestoreStep) Run(session *Session) error {
-	err := session.CurrentDeployment().Restore()
+func (s *RestoreStep) Run(session *Session, lockFree bool) error {
+	err := session.CurrentDeployment().Restore(lockFree)
 
 	if err != nil {
 		return errors.Wrap(err, "Failed to restore")

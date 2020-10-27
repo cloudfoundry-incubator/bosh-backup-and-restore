@@ -78,7 +78,7 @@ func backupAll(target, username, password, caCert, artifactPath string, withMani
 		}
 
 		printlnWithTimestamp(fmt.Sprintf("Starting backup of %s, log file: %s", deploymentName, logFilePath))
-		err := backuper.Backup(deploymentName, artifactPath)
+		err := backuper.Backup(deploymentName, artifactPath, lockFree)
 
 		if err != nil {
 			printlnWithTimestamp(fmt.Sprintf("ERROR: failed to backup %s", deploymentName))
@@ -122,7 +122,7 @@ func backupSingleDeployment(deployment, target, username, password, caCert, arti
 		return processError(orchestrator.NewError(err))
 	}
 
-	backupErr := backuper.Backup(deployment, artifactPath)
+	backupErr := backuper.Backup(deployment, artifactPath, lockFree)
 	if backupErr.ContainsUnlockOrCleanupOrArtifactDirExists() {
 		return processErrorWithFooter(backupErr, backupCleanupAdvisedNotice)
 	}

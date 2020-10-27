@@ -16,7 +16,7 @@ func NewDrainStep(logger Logger, artifactCopier ArtifactCopier) Step {
 	}
 }
 
-func (s *DrainStep) Run(session *Session) error {
+func (s *DrainStep) Run(session *Session, _ bool) error {
 	err := s.artifactCopier.DownloadBackupFromDeployment(session.CurrentArtifact(), session.CurrentDeployment())
 	if err != nil {
 		s.logger.Info("bbr", "Failed to create backup of %s on %v, failed during drain step\n", session.DeploymentName(), time.Now())

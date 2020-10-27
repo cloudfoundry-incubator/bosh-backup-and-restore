@@ -7,7 +7,7 @@ type BackupStep struct {
 	lockFree bool
 }
 
-func (s *BackupStep) Run(session *Session) error {
+func (s *BackupStep) Run(session *Session, _ bool) error {
 	err := session.CurrentDeployment().Backup(s.executor, s.lockFree)
 	if err != nil {
 		return NewBackupError(err.Error())

@@ -8,7 +8,7 @@ func NewCleanupStep() Step {
 	return &CleanupStep{}
 }
 
-func (s *CleanupStep) Run(session *Session) error {
+func (s *CleanupStep) Run(session *Session, _ bool) error {
 
 	if err := session.CurrentDeployment().Cleanup(); err != nil {
 		return NewCleanupError(

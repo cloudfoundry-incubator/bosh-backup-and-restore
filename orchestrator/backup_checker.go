@@ -19,10 +19,10 @@ func NewBackupChecker(logger Logger, deploymentManager DeploymentManager, lockOr
 	}
 }
 
-func (b BackupChecker) Check(deploymentName string) Error {
+func (b BackupChecker) Check(deploymentName string, lockFree bool) Error {
 	session := NewSession(deploymentName)
 
-	err := b.Workflow.Run(session)
+	err := b.Workflow.Run(session, lockFree)
 
 	return err
 }

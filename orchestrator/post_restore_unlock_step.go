@@ -14,7 +14,7 @@ func NewPostRestoreUnlockStep(lockOrderer LockOrderer, executor executor.Executo
 	}
 }
 
-func (s *PostRestoreUnlockStep) Run(session *Session) error {
+func (s *PostRestoreUnlockStep) Run(session *Session, _ bool) error {
 	err := session.CurrentDeployment().PostRestoreUnlock(s.lockOrderer, s.executor)
 
 	if err != nil {

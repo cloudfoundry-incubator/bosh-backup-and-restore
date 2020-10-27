@@ -46,7 +46,7 @@ func (d DeploymentBackupCleanupCommand) Action(c *cli.Context) error {
 			return processError(orchestrator.NewError(err))
 		}
 
-		cleanupErr := cleaner.Cleanup(deployment)
+		cleanupErr := cleaner.Cleanup(deployment, false)
 		return processError(cleanupErr)
 	}
 
@@ -107,7 +107,7 @@ func cleanupAllDeployments(target, username, password, caCert, bbrVersion string
 }
 
 func cleanup(cleaner *orchestrator.BackupCleaner, deployment string) orchestrator.Error {
-	err := cleaner.Cleanup(deployment)
+	err := cleaner.Cleanup(deployment, false)
 	if err != nil {
 		fmt.Printf("Failed to cleanup deployment '%s'\n", deployment)
 		return err

@@ -13,7 +13,7 @@ type CreateArtifactStep struct {
 	timeStamp         string
 }
 
-func (s *CreateArtifactStep) Run(session *Session) error {
+func (s *CreateArtifactStep) Run(session *Session, _ bool) error {
 	s.logger.Info("bbr", "Starting backup of %s...\n", session.DeploymentName())
 
 	directoryName := fmt.Sprintf("%s_%s", session.DeploymentName(), s.timeStamp)

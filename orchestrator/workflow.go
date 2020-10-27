@@ -9,12 +9,12 @@ func NewWorkflow() *Workflow {
 	return &Workflow{}
 }
 
-func (workflow *Workflow) Run(session *Session) Error {
+func (workflow *Workflow) Run(session *Session, lockFree bool) Error {
 	var errs Error
 	currentNode := workflow.StartingNode
 
 	for currentNode != nil {
-		err := currentNode.step.Run(session)
+		err := currentNode.step.Run(session, lockFree)
 		if err != nil {
 			errs = append(errs, err)
 			currentNode = workflow.findNode(currentNode.failStep)
@@ -52,7 +52,7 @@ func (workflow *Workflow) StartWith(step Step) *Node {
 }
 
 type Step interface {
-	Run(*Session) error
+	Run(*Session, bool) error
 }
 
 type Node struct {

@@ -15,7 +15,7 @@ type DeploymentManager struct {
 	downloadManifest bool
 }
 
-func (b *DeploymentManager) Find(deploymentName string) (orchestrator.Deployment, error) {
+func (b *DeploymentManager) Find(deploymentName string, _ bool) (orchestrator.Deployment, error) {
 	instances, err := b.FindInstances(deploymentName)
 	return orchestrator.NewDeployment(b.Logger, instances), errors.Wrap(err, "failed to find instances for deployment "+deploymentName)
 }
