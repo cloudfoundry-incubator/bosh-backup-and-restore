@@ -2,7 +2,6 @@ package orchestrator
 
 import (
 	"fmt"
-
 	"strings"
 
 	"github.com/cloudfoundry-incubator/bosh-backup-and-restore/executor"
@@ -103,7 +102,7 @@ func (bd *deployment) Backup(exe executor.Executor, lockFree bool) error {
 	for _, i := range instances {
 		i.MarkArtifactDirCreated()
 		for _, j := range i.Jobs() {
-			if lockFree && i.Name() == "backup_restore" && strings.Contains(j.Name(), "blobstore") {
+			if lockFree && strings.Contains(j.Name(), "blobstore") {
 				// SPIKE CODE: when backing up lock-free, never back up external blobstores.
 				// See this story for spike details: https://www.pivotaltracker.com/story/show/174147726
 				continue
@@ -132,7 +131,6 @@ func (bd *deployment) PostBackupUnlock(afterSuccessfulBackup bool, lockOrderer L
 	executableJobConstructor := NewJobPostFailedBackupUnlockExecutable
 	if afterSuccessfulBackup {
 		executableJobConstructor = NewJobPostSuccessfulBackupUnlockExecutable
-
 	}
 	postBackupUnlockErrors := executor.Run(newJobExecutables(reversedJobs, executableJobConstructor))
 

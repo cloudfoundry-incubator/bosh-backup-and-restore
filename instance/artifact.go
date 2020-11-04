@@ -3,6 +3,7 @@ package instance
 import (
 	"fmt"
 	"io"
+	"strings"
 
 	"github.com/cloudfoundry-incubator/bosh-backup-and-restore/orchestrator"
 	"github.com/cloudfoundry-incubator/bosh-backup-and-restore/ssh"
@@ -62,6 +63,9 @@ type Artifact struct {
 }
 
 func (b *Artifact) StreamFromRemote(writer io.Writer) error {
+	if strings.Contains(b.artifactDirectory, "blobstore") {
+		return nil
+	}
 	b.Logger.Debug("bbr", "Streaming backup from instance %s/%s", b.instance.Name(), b.instance.ID())
 	err := b.remoteRunner.ArchiveAndDownload(b.artifactDirectory, writer)
 	if err != nil {
@@ -72,6 +76,9 @@ func (b *Artifact) StreamFromRemote(writer io.Writer) error {
 }
 
 func (b *Artifact) StreamToRemote(reader io.Reader) error {
+	if strings.Contains(b.artifactDirectory, "blobstore") {
+		return nil
+	}
 	err := b.remoteRunner.CreateDirectory(b.artifactDirectory)
 	if err != nil {
 		return errors.Wrap(err, "Creating backup directory on the remote failed")
@@ -83,6 +90,9 @@ func (b *Artifact) StreamToRemote(reader io.Reader) error {
 
 func (b *Artifact) Size() (string, error) {
 	b.Logger.Debug("bbr", "Calculating size of backup on %s/%s", b.instance.Name(), b.instance.ID())
+	if strings.Contains(b.artifactDirectory, "blobstore") {
+		return "0", nil
+	}
 
 	size, err := b.remoteRunner.SizeOf(b.artifactDirectory)
 	if err != nil {
@@ -93,6 +103,9 @@ func (b *Artifact) Size() (string, error) {
 }
 
 func (b *Artifact) SizeInBytes() (int, error) {
+	if strings.Contains(b.artifactDirectory, "blobstore") {
+		return 0, nil
+	}
 	size, err := b.remoteRunner.SizeInBytes(b.artifactDirectory)
 	if err != nil {
 		return 0, errors.Wrap(err, fmt.Sprintf("Unable to check size of %s", b.artifactDirectory))
@@ -101,6 +114,9 @@ func (b *Artifact) SizeInBytes() (int, error) {
 }
 
 func (b *Artifact) Checksum() (orchestrator.BackupChecksum, error) {
+	if strings.Contains(b.artifactDirectory, "blobstore") {
+		return map[string]string{}, nil
+	}
 	b.Logger.Debug("bbr", "Calculating shasum for remote files on %s/%s", b.instance.Name(), b.instance.ID())
 
 	backupChecksum, err := b.remoteRunner.ChecksumDirectory(b.artifactDirectory)
@@ -112,6 +128,9 @@ func (b *Artifact) Checksum() (orchestrator.BackupChecksum, error) {
 }
 
 func (b *Artifact) Delete() error {
+	if strings.Contains(b.artifactDirectory, "blobstore") {
+		return nil
+	}
 	b.Logger.Debug("bbr", "Deleting artifact directory on %s/%s", b.instance.Name(), b.instance.ID())
 
 	err := b.remoteRunner.RemoveDirectory(b.artifactDirectory)

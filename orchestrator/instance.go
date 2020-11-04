@@ -2,6 +2,7 @@ package orchestrator
 
 import (
 	"io"
+	"strings"
 )
 
 type InstanceIdentifer interface {
@@ -156,6 +157,9 @@ func (is instances) Backup() error {
 
 func (is instances) Restore(lockFree bool) error {
 	for _, instance := range is {
+		if strings.Contains(instance.Name(), "blobstore") {
+			continue
+		}
 		err := instance.Restore(lockFree)
 		if err != nil {
 			return err

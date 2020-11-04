@@ -42,7 +42,7 @@ func (d DeploymentRestoreCommand) Action(c *cli.Context) error {
 
 	deployment := c.Parent().String("deployment")
 	artifactPath := c.String("artifact-path")
-	lockFree := c.Bool("unsafe-lock-free-backup")
+	lockFree := c.Bool("unsafe-lock-free-restore")
 
 	restorer, err := factory.BuildDeploymentRestorer(c.Parent().String("target"),
 		c.Parent().String("username"),
@@ -50,7 +50,6 @@ func (d DeploymentRestoreCommand) Action(c *cli.Context) error {
 		c.Parent().String("ca-cert"),
 		c.App.Version,
 		c.GlobalBool("debug"))
-
 	if err != nil {
 		return processError(orchestrator.NewError(err))
 	}
